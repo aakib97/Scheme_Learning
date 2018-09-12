@@ -1,0 +1,29 @@
+#lang racket
+;;Problem 1
+"Problem 1"
+(define (make-tree value left right)(list value left right))
+(define (value T) (car T))
+(define (right T) (caddr T))
+(define (left T) (cadr T))
+(define (insert x T)
+ (cond ((null? T) (make-tree x '() '()))
+       ((equal? x (value T)) T)
+       ((< x (value T)) (make-tree (value T)(insert x (left T))(right T)))
+       ((> x (value T)) (make-tree (value T)(left T)(insert x (right T))))
+ )
+)
+
+;;Problem 2
+"Problem 2"
+(define (element? x T)
+ (cond (((null? T)#f)
+        ((equal? x (root T)) #t)
+        ((> x (root T)) (element? x (rightchild T)))
+        ((< x (root T)) (element? x (leftchild T))))
+ )
+)
+(define (occurences-in-tree tree value)
+(let ((occurence 0))
+  
+ )
+)

@@ -1,0 +1,23 @@
+#lang racket
+(define (inc x) (+ x 1))
+(define (inc2 x) (inc x))
+(inc 1)
+(inc2 2)
+
+(define (square x) (* x x))
+(define (fourth x) (square (square x)))
+(define (quad1 x) (+(square x) 1))
+(define (quad2 x) (+(* 16 (fourth x)) 22))
+(define (p x) (*(fourth (quad1 x)) (square (quad2 x))))
+
+(define(sixteenth x) (fourth (fourth x)))
+(define(sixty-fourth x) (sixteenth (fourth x)))
+
+
+(define (radican sig) (*(* 2 sig) 3.142))
+(define (N x sig) (*(/ 1 (sqrt (radican sig)) (expt 2.718 (/ (square x) (* -2 sig))))))
+
+(define (power theta) (* theta (/ 2 3.142)))
+(define (fsprial theta) (expt 1.618 (power theta)))
+
+(define )

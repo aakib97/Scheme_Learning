@@ -1,0 +1,79 @@
+#lang racket
+;Problem 1
+(define (dominate f g)
+        (lambda (c)
+           (if (> (f c) (g c))
+                  c
+                  ((dominate f g) (+ c 1)))
+         )
+)
+(define f1 (lambda (c) (* 2 c)))
+(define g1 (lambda (c) (+ 5 c)))
+((dominate f1 g1) 1)
+;;returns 6
+(define f2 (lambda (c) (* 3 c)))
+(define g2 (lambda (c) (+ 3 c)))
+((dominate f2 g2) 1)
+;;returns 2
+
+
+;Problem 2
+(define (double f) (lambda (x) (f (f x))))
+
+(define inc (lambda (x) (+ x 1)))
+
+(((double (double double))inc)5)
+;;returns 21
+
+;Problem 3
+;;P3 a
+(define (find sequence test n)
+        (lambda (x)
+           (if (= (test x) 1)
+                  (sequence x)
+                  #f)
+         )
+)
+(define (fibn x)
+ (cond ((= x 0) 0)
+ ((= x 1) 1)
+ ((> x 1) (+ (fib (- x 1))
+ (fib (- x 2))))
+ )
+)
+(define fib (lambda (x) (fibn x)))
+(define n1 (lambda (x) x))
+
+;;P3 b
+(define even?
+  (lambda (x)
+    (if (= (modulo (fib x) 2) 0)
+        1
+        0
+     )
+  )
+)
+
+((find fib even? n1) 5)
+;;returns false
+(define odd?
+  (lambda (x)
+    (if (= (modulo (- (fib x) 1) 2) 0)
+        1
+        0
+     )
+  )
+)
+((find fib odd? n1) 5)
+;;returns 5
+
+;;P3 c
+;;I couldn't figure out how to test for prime numbers
+
+;Problem 4
+(#%require plot )
+(plot-new-window? #t)
+(define (f x) (+ (* ( sin x ) (- 3 x )) 1))
+(plot ( function f (- 5 ) 5 #:label "f(x)") 
+#:x-min -5 #:x-max 5 #:y-min -5 #:y-max 5)
+

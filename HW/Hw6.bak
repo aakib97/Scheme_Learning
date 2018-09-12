@@ -1,0 +1,126 @@
+#lang racket
+;;Problem 1
+"Problem 1"
+;a
+"a"
+(define (list-sum l)
+ (if (null? l)
+     0
+     (+ (car l) (list-sum (cdr l)))
+ )
+)
+(list-sum '(1 2 3))
+;returns 6
+(list-sum '(1 2 3 4 5))
+;returns 15
+
+
+;b
+"b"
+(define (mean l)
+ (if (null? l)
+     0
+     (/ (list-sum l) (length l))
+ )
+)
+(mean '(1 2 3))
+;returns 2
+(mean '(1 2 3 4 5))
+;returns 3
+
+;c
+"c"
+(define (dev-square l)
+ (define l-bar (mean l))
+  (define (helper l)
+   (if (null? l)
+      '()
+      (map (lambda (x) (expt (- x l-bar) 2)) l)
+  )
+ )
+ (helper l)
+)
+
+(dev-square '(1 2 3 4 5))
+;returns (4 1 0 1 4)
+(dev-square '(6 7 8 9 10))
+
+;d
+"d"
+(define (std-dev l)(sqrt(/ (list-sum (dev-square l))(length l))))
+(std-dev '(1 2 3 4 5))
+;returns 1.4142135623730951
+
+;e
+"e"
+(define (map2 f x y) (map (lambda (x y) (f x y)) x y))
+(map2 (lambda (x y) (* x y)) '(1 2 3 4 5) '(6 7 8 9 10))
+;returns (6 14 24 36 50)))
+(map2 (lambda (x y) (/ x y)) '(4 16 18 20) '(2 8 9 10))
+;returns (2 2 2 2)
+
+;f
+"f"
+(define (covariance x y)(map (lambda (x y) (* x y))(dev-square x) (dev-square y)))
+(covariance '(1 2 3 4 5) '(6 7 8 9 10))
+
+;g
+"g"
+(define (pearson-coeff x y)
+ (if (not (equal? (length x) (length y)))
+     "error"
+     (/ (mean (covariance x y)) (* (std-dev x) (std-dev y)))
+ )
+)
+(pearson-coeff '(1 2 3 4 5) '(6 7 8 9 10))
+;returns 3.399999999999
+
+;;Problem 2
+"Problem 2"
+;a
+"a"
+(define (ab_pair x y)
+ (let* ((a (* (pearson-coeff x y)(/ (std-dev y) (std-dev x))))
+        (b (- (mean y)(* a (mean x)))))
+        (cons a b)
+ )
+)
+
+(ab_pair '(1 2 3) '(4 5 6))
+;returns (1.0 . 3.0)
+(ab_pair '(1 5 9) '(7 5 3))
+;returns (4.0 . -15.0)
+
+;b
+"b"
+(define (best-fit-fn px py)(lambda (x) (+ (cdr (ab_pair px py)) (* x (car (ab_pair px py))))))
+
+(define X '(160 180 200 220 240 260 280))
+(define Y '(126 103 82 75 78 40 20))
+
+(define fitline (best-fit-fn X Y))
+
+;c
+"c"
+(define (zip2 a b)(map2 vector a b))
+(zip2 '(1 2 3) '(4 5 6))
+;returns (#(1 4) #(2 5) #(3 6))
+(zip2 '(2 4 9) '(8 1 6))
+;returns (#(2 8) #(4 1) #(9 6))
+
+(require plot)
+(plot-new-window? #t)
+(plot (list (axes)
+            (function fitline 140 300)
+            (points (zip2 X Y))))
+;;Problem 3
+"Problem 3"
+(define (merge list1 list2)
+ (cond ((null? list1) '())
+       ((null? list2) '())
+       ((<(car list1)(car list2))(cons (car list1) (merge (cdr list1) (cdr list2))))
+       ((<(car list2)(car list1))(cons (car list2) (merge (cdr list1) (cdr list2))))
+
+ )
+)
+(merge '(1 2 3) '(4 5 6))

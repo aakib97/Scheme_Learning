@@ -1,0 +1,33 @@
+#lang racket
+(define (make-queue_A maxsize)
+ (let ((queue (make-vector maxsize)))
+ (define (empty?) (null? queue))
+ (define (enqueue x)(vector-set! queue (- maxsize 1) x))
+ (define (vector-delete v i)(vector-append (vector-take v i) (vector-drop v (+ i 1)))) 
+ (define (dequeue)
+  (cond ((null? queue) '())
+        ((null? (vector-ref queue (- maxsize 1))) '())
+        (else
+         (vector-delete queue (- maxsize 1))
+        )
+  )
+ queue
+ )
+ (define (dispatcher method)
+  (cond ((eq? method 'empty) empty?)
+        ((eq? method 'enqueue) enqueue)
+        ((eq? method 'dequeue) dequeue)
+  )
+ )
+ dispatcher
+ )
+)
+
+(define myqueue (make-queue_A 10))
+(myqueue 'empty?)
+((myqueue 'enqueue)1)
+((myqueue 'enqueue)2)
+((myqueue 'enqueue)3)
+((myqueue 'enqueue)4)
+((myqueue 'enqueue)5)
+((myqueue 'dequeue))

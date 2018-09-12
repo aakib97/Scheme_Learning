@@ -1,0 +1,60 @@
+#lang racket
+(define (make-tree value left right)(list value left right))
+(define (value T) (car T))
+(define (right T) (caddr T))
+(define (left T) (cadr T))
+
+;;Problem 1
+"problem 1"
+(define (tree-equal? t1 t2)
+ (cond  ((and (null? t1) (null? t2)) "equal")
+        ((= (value t1) (value t2))
+           (tree-equal? (left t1) (left t2))
+           (tree-equal? (right t1) (right t2)))
+        ((not (= (value t1) (value t2))) "not equal")
+     
+ )
+)
+(define tree1 (make-tree 6 (make-tree 4 '() '()) (make-tree 8 '() '())))
+(define tree2 (make-tree 6 (make-tree 4 '() '()) (make-tree 8 '() '())))
+(tree-equal? tree1 tree2)
+;returns "equal"
+(define tree3 (make-tree 7 (make-tree 2 '() '()) (make-tree 9 '() '())))
+(tree-equal? tree1 tree3)
+;returns "not equal
+
+;;Problem 2
+"Problem 2"
+(define (insert x T)
+ (cond ((null? T) (make-tree x '() '()))
+       ((equal? x (value T)) T)
+       ((< x (value T)) (make-tree (value T)(insert x (left T))(right T)))
+       ((> x (value T)) (make-tree (value T)(left T)(insert x (right T))))
+ )
+)
+(define (insert-list L T)
+ (cond ((null? L) '())
+     (insert (car L) T)(insert-list (cdr L) T)
+ )
+)
+
+(define (sort-extract T)
+ (if (null? T)
+     '()
+     (append (sort-extract (left T))
+             (list (value T))
+             (sort-extract (right T)))
+ )
+)
+(define (tree-sort list)(sort-extract (insert list (make-tree '() '() '()))))
+
+
+;;Problem 3
+"Problem 3"
+
+;;Problem 4
+"Problem 4"
+(define (tree-map T f)
+ (define f (lambda (x) (f x)))
+  (make-tree (f(value T)) (tree-map (left T) f) (tree-map (right T) f))
+)
